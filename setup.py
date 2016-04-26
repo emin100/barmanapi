@@ -27,7 +27,7 @@ setup(
     version=barman_api['__version__'],
     author='Mehmet Emin KARAKAS',
     author_email='emin100@gmail.com',
-    url='https://github.com/emin100/barman-api',
+    url='https://github.com/emin100/barmanapi',
     keywords="barmanapi Rest api barman",
     packages=['barmanapi', ],
     scripts=['bin/barmanapi', ],
