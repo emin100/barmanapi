@@ -32,8 +32,8 @@ setup(
     packages=['barmanapi', ],
     scripts=['bin/barmanapi', ],
     license='GPL-3.0',
-    description='This project convert from BARMAN command to RESTful api',
-    long_description='This project convert from BARMAN command to RESTful api',
+    description='This project convert from BARMAN command to RESTful api. Barman API support full future and all versions of BARMAN.',
+    long_description='This project convert from BARMAN command to RESTful api. Barman API support full future and all versions of BARMAN.',
     install_requires=install_requires,
     platforms=['Linux', 'Mac OS X'],
     data_files=[
