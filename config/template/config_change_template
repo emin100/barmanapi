@@ -1,0 +1,5 @@
+tmpfile=$(mktemp)
+printf "#!/usr/bin/env python\nfrom ConfigParser import ConfigParser\nparser = ConfigParser()\nparser.read('{config_file}')\n{config_set}\nwith open('{config_file}', 'wb') as configfile:\n    parser.write(configfile)" > $tmpfile
+chmod +x $tmpfile
+$tmpfile
+#rm -rf $tmpfile

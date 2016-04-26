@@ -1,0 +1,7 @@
+venv/
+.idea/
+*.pyc
+temp/
+barmanapi.egg-info/
+dist/
+build/
