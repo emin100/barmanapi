@@ -1,5 +1,5 @@
 # PostgreSQL Barmen RESTful Api
-[![Build Status](https://travis-ci.org/emin100/barman-api.svg?branch=master)](https://travis-ci.org/emin100/barman-api)
+[![Build Status](https://travis-ci.org/emin100/barman-api.svg?branch=master)](https://travis-ci.org/emin100/barmanapi)
 
 This project convert from [BARMAN](http://www.pgbarman.org/ "BARMAN") command to RESTful  api. Barman API support full future and all versions of BARMAN. 
 
