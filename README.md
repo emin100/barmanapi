@@ -51,7 +51,7 @@ Barman API needs a directory to store data.
   api@barmanapi$ git checkout https://github.com/emin100/barmanapi.git
   ```       
   ```
-  api@barmanapi$ cd barman-api
+  api@barmanapi$ cd barmanapi
   ```       
   ```
   api@barmanapi$ sudo python setup.py install
