@@ -7,9 +7,9 @@ This project convert from [BARMAN](http://www.pgbarman.org/ "BARMAN") command to
 Barman API needs a directory to store data.   
   * Barman API Server       
   ```
-  api@barmanapi$ sudo mkdir /var/lib/barmanapi
-  api@barmanapi$ sudo chown user:user /var/lib/barmanapi
-  api@barmanapi$ sudo chown user:user /etc/barmanapi.conf
+  api@barmanapi$ sudo mkdir /var/lib/barmanapi      
+  api@barmanapi$ sudo chown user:user /var/lib/barmanapi        
+  api@barmanapi$ sudo chown user:user /etc/barmanapi.conf       
   ```
   * Barman Server               
   ```
