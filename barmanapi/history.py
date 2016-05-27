@@ -18,15 +18,17 @@ class History(Resource):
 
     @staticmethod
     def get_file(folder):
+        from app import message_format
         try:
             with open(folder + '/result.json', "rb") as file_open:
                 log = json.load(file_open)
         except IOError:
-            log = {'code': -99}
+            log = message_format(-99, 'Command not execute yet.')
         return log
 
     def get(self, command, option=None):
         from auth import Auth
+        from app import message_format
 
         Auth().verify_access('history', command, option)
         Auth().verify_deny('history', command, option)
@@ -34,7 +36,8 @@ class History(Resource):
         if command == 'list':
             list_async = []
             active_folder = self.api_directory + '/active/' + datetime.today().strftime('%Y%m')
-
+            status_code = 200
+            message = ''
             try:
                 if request.args.get('past'):
                     tar = tarfile.open(self.api_directory + '/archive/' + request.args.get('past') + '.tar.gz')
@@ -52,10 +55,14 @@ class History(Resource):
 
                     list_async.append(obj)
             except IOError:
+                status_code = 500
+                message = 'IOError Past Log Not Found'
                 list_async = []
             except OSError:
+                status_code = 600
+                message = 'OSError Past Log Not Found'
                 list_async = []
-            return list_async
+            return message_format(status_code, message, list_async)
         elif command == 'result':
             decode = Auth().verify_token(request.args.get('ticket'))
             return self.get_file(decode['folder'])

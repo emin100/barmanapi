@@ -30,12 +30,15 @@ class Command(object):
         else:
             self.process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             message = self.process.communicate()
-            ret['code'] = self.process.returncode
-            if parse_line is True:
-                ret['message'] = message[0].replace('\t', '').split('\n')
+            if self.process.returncode == 0:
+                ret['status_code'] = 200
             else:
-                ret['message'] = message[0]
-            ret['err'] = message[1]
+                ret['status_code'] = self.process.returncode
+            if parse_line is True:
+                ret['list'] = message[0].replace('\t', '').split('\n')
+            else:
+                ret['list'] = message[0]
+            ret['message'] = message[1]
         return ret
 
     def prepare_command(self, command, option=None):
@@ -94,18 +97,19 @@ class Barman(Resource):
         from parser import BarmanCommandParser
 
         self.compress_history_data()
-
+        from app import message_format
         if command == 'reload':
             BarmanCommandParser().parse_man_5()
-            return BarmanCommandParser().parse_man()
+
+            return message_format(200, '', BarmanCommandParser().parse_man())
         barman_commands = BarmanCommandParser().load_barman_commands()
 
         if command == 'help':
-            return barman_commands
+            return message_format(200, '', barman_commands)
 
         if barman_commands.get(command):
             if option == 'help':
-                return barman_commands[command]
+                return message_format(200, '', barman_commands[command])
             elif not option:
                 required = barman_commands[command].get('required')
                 optional = barman_commands[command].get('optional')
@@ -142,7 +146,7 @@ class Barman(Resource):
                     Command().execute_command(self.command_directory, sync=False)
 
                     ticket = Auth().generate_token(dict({'folder': self.command_directory}), exp=False)
-                    return {'ticket': ticket, 'message': 'For result /history/result?ticket=' + ticket + '&token=XX'}
+                    return message_format(200, '', {'ticket': ticket, 'message': 'For result /history/result?ticket=' + ticket + '&token=XX'})
                 else:
                     return Command().execute_command(exec_command, sync=True)
 

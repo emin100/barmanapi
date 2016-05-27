@@ -75,9 +75,12 @@ class BarmanCommandParser(Command):
             ssh_command = barman_ssh + ' "%s"'
 
         command = self.execute_command(self.prepare_command(" -v"))
-        if command.get('code') == 0:
-            if command.get('err'):
-                version = command.get('err')
+        if command.get('status_code') == 200:
+            if command.get('list'):
+                if command.get('list')[0] != '':
+                    version = command.get('list')
+                else:
+                    version = command.get('message')
             else:
                 version = command.get('message')
             version = version.replace('\n', '')
@@ -103,13 +106,13 @@ class BarmanCommandParser(Command):
         command = self.execute_command(ssh_command.replace('%s', 'man 5 barman'))
 
         command_list = {}
-        if command['code'] != 0:
+        if command.get('status_code') != 200:
             raise BarmanException('Command Exception', 404, BarmanException.COMMAND_NOT_FOUND)
         else:
             begin = 0
             text = ''
             last_parameter = ''
-            for line in command['message']:
+            for line in command['list']:
                 if line == tag:
                     begin = 1
                     text = ''
@@ -159,9 +162,12 @@ class BarmanCommandParser(Command):
             ssh_command = barman_ssh + ' "%s"'
 
         command = self.execute_command(self.prepare_command(" -v"))
-        if command.get('code') == 0:
-            if command.get('err'):
-                version = command.get('err')
+        if command.get('status_code') == 200:
+            if command.get('list'):
+                if command.get('list')[0] != '':
+                    version = command.get('list')
+                else:
+                    version = command.get('message')
             else:
                 version = command.get('message')
             version = version.replace('\n', '')
@@ -188,11 +194,11 @@ class BarmanCommandParser(Command):
                     third_separator = d.get('third_separator')
         command = self.execute_command(ssh_command.replace('%s', 'man barman'))
         command_list = {}
-        if command['code'] != 0:
+        if command.get('status_code') != 200:
             raise BarmanException('Command Exception', 404, BarmanException.COMMAND_NOT_FOUND)
         else:
             begin = 0
-            for line in command['message']:
+            for line in command['list']:
                 if line == tag:
                     begin = 1
                     text = ''
@@ -207,7 +213,7 @@ class BarmanCommandParser(Command):
                     if line.startswith(' ' * first) and not line.startswith(' ' * int(first + 1)):
                         line = line.lstrip(' ')
                         comm = line.split(' ')
-                        if self.execute_command(self.prepare_command(comm[0], '-q --help'))['code'] == 0:
+                        if self.execute_command(self.prepare_command(comm[0], '-q --help'))['status_code'] == 200:
                             if last_command != '' and last_command != comm[0]:
 
                                 if len(text_options_val) > 0:

@@ -31,8 +31,8 @@ class Configuration(Resource):
             command_text = self.barman_config.get('remote_ssh') + ' "%s"'
         command_text = command_text.replace('%s', 'cat ' + self.barman_config.get('config_file'))
         result = Command().execute_command(command_text, parse_line=False)
-        if result.get('code') == 0:
-            buf = StringIO.StringIO(result.get('message'))
+        if result.get('status_code') == 200:
+            buf = StringIO.StringIO(result.get('list'))
             config = ConfigParser(io=buf)
             conf = {}
             for cc in config.sections():
@@ -44,14 +44,14 @@ class Configuration(Resource):
 
     def get(self, command=None, option=None):
         from auth import Auth
-
+        from app import message_format
         Auth().verify_access('config', command, option)
         Auth().verify_deny('config', command, option)
 
         if command == 'barman' and option == 'help':
-            return BarmanCommandParser().load_barman_config()
+            return message_format(200,'', BarmanCommandParser().load_barman_config())
         elif command == 'barman' and option == 'reload':
-            return BarmanCommandParser().parse_man_5()
+            return message_format(200,'',BarmanCommandParser().parse_man_5())
         elif command == 'barman' and option == 'change':
             config_set_str = None
             for param in request.args:
@@ -78,10 +78,10 @@ class Configuration(Resource):
                 command_text = self.barman_config.get('remote_ssh') + ' < '
             command_text += '' + temp_file
             result = Command().execute_command(command_text)
-            return self.get_barman_config()
+            return message_format(200,'',self.get_barman_config())
 
         elif command == 'barman':
-            return self.get_barman_config()
+            return message_format(200,'',self.get_barman_config())
 
         elif command == 'barmanapi' and option == 'change':
             config = self.current_app.config.config_main
@@ -91,10 +91,10 @@ class Configuration(Resource):
                     if request.args.get(param) != config.get(spl[0], spl[1]):
                         config.set(spl[0], spl[1], request.args.get(param))
                         config.write_config()
-            return self.get_config()
+            return message_format(200,'',self.get_config())
 
         elif command == 'barmanapi':
-            return self.get_config('dead')
+            return message_format(200,'',self.get_config('dead'))
 
         else:
             raise ConfigurationException('Api not found(config/' + command + ')', 405, ConfigurationException.NOT_FOUND)

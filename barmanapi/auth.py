@@ -30,7 +30,9 @@ class Auth(Resource):
             user_list = {}
             for username in user_config.sections():
                 user_list[username] = self.get_user_property(username)
-            return user_list
+            from app import message_format
+            # return {'status_code': 200, 'message': '', 'list': user_list}
+            return message_format(200, '', user_list)
 
         elif command == 'user' and option == 'change':
             if not request.args.get('username'):
@@ -50,7 +52,9 @@ class Auth(Resource):
                     user_config.set(request.args.get('username'), 'deny', request.args.get('deny'))
 
                 user_config.write_config()
-                return user_config.read_section(request.args.get('username'))
+
+                from app import message_format
+                return message_format(200, '', self.get_user_property(request.args.get('username')))
             except ConfigParserException:
                 raise AuthException("Username not found(" + request.args.get('username') + ")", 403,
                                     AuthException.NOT_FOUND)
@@ -87,8 +91,11 @@ class Auth(Resource):
                     user_config.set(request.args.get('username'), 'deny', [])
 
                 user_config.write_config()
+                from app import message_format
+                return message_format(200, '', self.get_user_property(request.args.get('username')))
         elif command == 'user' and option is None:
-            return {'access': eval(g.user.get('access')), 'deny': eval(g.user.get('deny'))}
+            from app import message_format
+            return message_format(200, '', {'access': eval(g.user.get('access')), 'deny': eval(g.user.get('deny'))})
         else:
             api = 'auth'
             if command:

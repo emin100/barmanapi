@@ -50,7 +50,6 @@ if not os.access(api_directory, os.W_OK):
     print(api_directory + ' directory not have write permission')
     exit()
 
-
 # create_directory(api_directory)
 create_directory(api_directory + '/archive')
 create_directory(api_directory + '/active')
@@ -68,6 +67,14 @@ auth = HTTPBasicAuth()
 
 app.config.config_main = config_main
 app.config.config_directory = '/usr/share/barmanapi/'
+
+
+def message_format(status_code=200, message='', list_return=None):
+    message_return = {'status_code': status_code, 'message': message}
+    if list_return is not None:
+        message_return.update({'list': list_return})
+    return message_return
+
 
 if not app.debug:
     import logging
