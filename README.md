@@ -48,7 +48,7 @@ Barman API needs a directory to store data.
 
 ####From source
   ```
-  api@barmanapi$ git checkout https://github.com/emin100/barman-api.git
+  api@barmanapi$ git checkout https://github.com/emin100/barmanapi.git
   ```       
   ```
   api@barmanapi$ cd barman-api
