@@ -59,6 +59,6 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Framework :: Flask',
-        'Natural Language :: English',
+        'Natural Language :: English'
     ],
 )

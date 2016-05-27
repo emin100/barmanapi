@@ -1,4 +1,4 @@
 recursive-include barmanapi *.py
 include config/barmanapi.conf config/client.conf config/man.conf config/template/config_change_template
 include bin/barmanapi
-include LICENSE PKG-INFO MANIFEST.in MANIFEST setup.py README
+include LICENSE PKG-INFO MANIFEST.in MANIFEST setup.py README.md
