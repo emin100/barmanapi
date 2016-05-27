@@ -6,11 +6,9 @@ This project convert from [BARMAN](http://www.pgbarman.org/ "BARMAN") command to
 ##Before you start
 Barman API needs a directory to store data.   
   * Barman API Server       
-  ```
-  api@barmanapi$ sudo mkdir /var/lib/barmanapi      
-  api@barmanapi$ sudo chown user:user /var/lib/barmanapi        
-  api@barmanapi$ sudo chown user:user /etc/barmanapi.conf       
-  ```
+  ```api@barmanapi$ sudo mkdir /var/lib/barmanapi```          
+  ```api@barmanapi$ sudo chown user:user /var/lib/barmanapi```        
+  ```api@barmanapi$ sudo chown user:user /etc/barmanapi.conf```     
   * Barman Server               
   ```
   barman@backup$ sudo chown barman:barman /etc/barman.conf
@@ -20,7 +18,7 @@ Barman API needs a directory to store data.
   You don't need anything.
 ####Use with the BARMAN server and Barman API Server in the diffrent machine
   Barman API using SSH connection to BARMAN server. You must provide ssh connection BARAMAN Server and Barman API server with trust connection. 
-######If you don't have a ssh keygen
+######If you don't have a ssh keygen    
   ```
   api@barmanapi$ ssh-keygen
   ```
@@ -50,10 +48,15 @@ Barman API needs a directory to store data.
 
 ####From source
   ```
-  api@barmanapi$ git checkout https://github.com/emin100/barman-api.git   
-  api@barmanapi$ cd barman-api   
+  api@barmanapi$ git checkout https://github.com/emin100/barman-api.git
+  ```       
+  ```
+  api@barmanapi$ cd barman-api
+  ```       
+  ```
   api@barmanapi$ sudo python setup.py install
-  ```   
+  ```
+   
 #### Default User
 Basic Auth default user
 
@@ -63,7 +66,7 @@ Basic Auth default user
 ####Start Server
   ```
   api@barmanapi$ barmanapi runserver
-  ```
+  ```       
 <b>Note:</b> First usage, must call http://host:port/barman/reload?token=XX
 
   
@@ -164,11 +167,11 @@ Current user access and deny parameters
 Get rest user list
 ######/auth/user/change
 <b>Auth:</b>Yes  
-<b>Parameters: </b>
-  * username: Required
-  * password
-  * access
-  * deny
+<b>Parameters: </b>     
+  * username: Required      
+  * password        
+  * access      
+  * deny        
 
 <b>Return:</b> updated user properties  
 
@@ -177,10 +180,10 @@ Change user properties
 ######/auth/user/add
 <b>Auth:</b>Yes   
 <b>Parameters: </b>   
-  * username: Required
-  * password: Required
-  * access
-  * deny
+  * username: Required      
+  * password: Required      
+  * access      
+  * deny        
 
 <b>Return:</b> added user properties       
 
@@ -189,12 +192,13 @@ Add user
 ####CONFIG
 Rest: /config   
 Auth Model: Token Based     
-Description: You can change barman or barmanapi config file in rest api. If you want to use this future, you give write access to config files. 
-  * For Barman API
+Description: You can change barman or barmanapi config file in rest api. If you want to use this future, you give write access to config files.     
+
+  * For Barman API      
   ```
   api@barmanapi$ sudo chown api:api /etc/barmanapi.conf
   ```
-  * For Barman
+  * For Barman      
   ```
   barman@backup$ sudo chown barman:barman /etc/barman.conf
   ```
@@ -226,9 +230,9 @@ Description: You can change barman or barmanapi config file in rest api. If you 
   * token: Required
 
 <b>Return:</b> Change Barman configuration          
-<b>Example:</b>         
-  * http://host:port/config/barman/change?application.store_directory=/var/lib/barmanapi&token=XX
-  * http://host:port/config/barman/change?barman.command=/usr/bin/barman&token=XX
+<b>Example:</b>             
+  * http://host:port/config/barman/change?application.store_directory=/var/lib/barmanapi&token=XX       
+  * http://host:port/config/barman/change?barman.command=/usr/bin/barman&token=XX       
   
 <b>Note:</b> Must be restart barman       
 
@@ -244,10 +248,10 @@ Description: You can change barman or barmanapi config file in rest api. If you 
 <b>Parameters: </b>   
   * token: Required
 
-<b>Return:</b> Change Barman API configuration
+<b>Return:</b> Change Barman API configuration      
 <b>Example:</b>         
-  * http://host:port/config/barmanapi/change?barman.barman_user=barman&token=XX
-  * http://host:port/config/barmanapi/change?main.description=blabla&token=XX
+  * http://host:port/config/barmanapi/change?barman.barman_user=barman&token=XX     
+  * http://host:port/config/barmanapi/change?main.description=blabla&token=XX       
   
 <b>Note:</b> Must be restart barmanapi      
 
@@ -257,8 +261,8 @@ Auth Model: Token Based
 ######/history/list
 <b>Auth:</b>Yes   
 <b>Parameters: </b>   
-  * token: Required
-  * past: Optional - YYYYmm (Example : 201602). Get past archive history.
+  * token: Required     
+  * past: Optional - YYYYmm (Example : 201602). Get past archive history.       
 
 <b>Return:</b> async command result list        
 
@@ -271,8 +275,8 @@ In month executed async commands list. If you want to past history, you must be 
 ######/history/result
 <b>Auth:</b>Yes   
 <b>Parameters: </b>   
-  * token: Required
-  * ticket: Required
+  * token: Required     
+  * ticket: Required        
 
 <b>Return:</b> Sync command result       
 
@@ -282,13 +286,13 @@ Ticket related async command result.
 ####BARMAN API
 Rest: /barman   
 Auth Model: Token Based   
-<b>Description:</b> Execute barman commands. If you want to see parameter list, you use /barman/command/help url or full api list /barman/help url.
+<b>Description:</b> Execute barman commands. If you want to see parameter list, you use /barman/command/help url or full api list /barman/help url.     
 
 <b>Example:</b>   
-  * http://host:port/barman/help?token=XX -> Return all usable commands, descriptions and parameters list
-  * http://host:port/barman/backup/help?token=XX -> Return backup command description and parameters list
-  * http://host:port/barman/backup?SERVERNAME=main&token=XX
-  * http://host:port/barman/list-server?token=XX
+  * http://host:port/barman/help?token=XX -> Return all usable commands, descriptions and parameters list       
+  * http://host:port/barman/backup/help?token=XX -> Return backup command description and parameters list       
+  * http://host:port/barman/backup?SERVERNAME=main&token=XX     
+  * http://host:port/barman/list-server?token=XX        
 
 
 
