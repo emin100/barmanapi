@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Barmanapi by emin100</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Barmanapi</h1>
+      <h2 class="project-tagline">This project convert from BARMAN command to RESTful  api. Barman API support full future and all versions of BARMAN. </h2>
+      <a href="https://github.com/emin100/barmanapi" class="btn">View on GitHub</a>
+      <a href="https://github.com/emin100/barmanapi/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/emin100/barmanapi/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="postgresql-barman-restful-api" class="anchor" href="#postgresql-barman-restful-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PostgreSQL Barman RESTful Api</h1>
+
+<p><a href="https://travis-ci.org/emin100/barmanapi"><img src="https://travis-ci.org/emin100/barman-api.svg?branch=master" alt="Build Status"></a></p>
+
+<p>This project convert from <a href="http://www.pgbarman.org/" title="BARMAN">BARMAN</a> command to RESTful  api. Barman API support full future and all versions of BARMAN. </p>
+
+<h2>
+<a id="before-you-start" class="anchor" href="#before-you-start" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Before you start</h2>
+
+<p>Barman API needs a directory to store data.   </p>
+
+<ul>
+<li>Barman API Server<br>
+<code>api@barmanapi$ sudo mkdir /var/lib/barmanapi</code><br>
+<code>api@barmanapi$ sudo chown user:user /var/lib/barmanapi</code><br>
+<code>api@barmanapi$ sudo chown user:user /etc/barmanapi.conf</code><br>
+</li>
+<li>Barman Server<br>
+<code>
+barman@backup$ sudo chown barman:barman /etc/barman.conf
+</code>
+</li>
+</ul>
+
+<h4>
+<a id="use-with-the-barman-server-and-barman-api-server-in-the-same-machine" class="anchor" href="#use-with-the-barman-server-and-barman-api-server-in-the-same-machine" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use with the BARMAN server and Barman API Server in the same machine</h4>
+
+<p>You don't need anything.</p>
+
+<h4>
+<a id="use-with-the-barman-server-and-barman-api-server-in-the-diffrent-machine" class="anchor" href="#use-with-the-barman-server-and-barman-api-server-in-the-diffrent-machine" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use with the BARMAN server and Barman API Server in the diffrent machine</h4>
+
+<p>Barman API using SSH connection to BARMAN server. You must provide ssh connection BARAMAN Server and Barman API server with trust connection. </p>
+
+<h6>
+<a id="if-you-dont-have-a-ssh-keygen" class="anchor" href="#if-you-dont-have-a-ssh-keygen" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>If you don't have a ssh keygen</h6>
+
+<pre><code>  api@barmanapi$ ssh-keygen
+</code></pre>
+
+<h6>
+<a id="trust-connection-to-barman-server" class="anchor" href="#trust-connection-to-barman-server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Trust connection to BARMAN server</h6>
+
+<pre><code>  api@barmanapi$ ssh-copy-id barman@backup
+</code></pre>
+
+<h2>
+<a id="system-requirements" class="anchor" href="#system-requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>System requirements</h2>
+
+<ul>
+<li>Linux/Unix</li>
+<li>Python &gt; 2.6</li>
+<li>Python modules:
+
+<ul>
+<li>Flask</li>
+<li>Flask-HTTPAuth</li>
+<li>Flask-Script</li>
+<li>pyjwt</li>
+</ul>
+</li>
+<li>ssh</li>
+</ul>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>INSTALL</h2>
+
+<h4>
+<a id="from-pip" class="anchor" href="#from-pip" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>From pip</h4>
+
+<pre><code>  api@barmanapi$ sudo pip install barmanapi
+</code></pre>
+
+<h4>
+<a id="from-source" class="anchor" href="#from-source" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>From source</h4>
+
+<pre><code>  api@barmanapi$ git checkout https://github.com/emin100/barmanapi.git
+</code></pre>
+
+<pre><code>  api@barmanapi$ cd barmanapi
+</code></pre>
+
+<pre><code>  api@barmanapi$ sudo python setup.py install
+</code></pre>
+
+<h4>
+<a id="default-user" class="anchor" href="#default-user" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Default User</h4>
+
+<p>Basic Auth default user</p>
+
+<p><b>Username:</b>memin
+<b>Password:</b>1258</p>
+
+<h4>
+<a id="start-server" class="anchor" href="#start-server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Start Server</h4>
+
+<pre><code>  api@barmanapi$ barmanapi runserver
+</code></pre>
+
+<p><b>Note:</b> First usage, must call http://host:port/barman/reload?token=XX</p>
+
+<h2>
+<a id="basic-configuration" class="anchor" href="#basic-configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic configuration</h2>
+
+<h4>
+<a id="directory-list" class="anchor" href="#directory-list" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Directory List</h4>
+
+<h6>
+<a id="varlibbarmanapi" class="anchor" href="#varlibbarmanapi" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/var/lib/barmanapi/</h6>
+
+<p>Store BARMAN API data files.    </p>
+
+<ul>
+<li>archive: All active folder compress by month</li>
+<li>active : Async commands and results store in directory</li>
+<li>config : Barman commands and config parameter templates store in directory</li>
+<li>garbage: Temp directory</li>
+<li>logs   : All logs store in directory</li>
+</ul>
+
+<h6>
+<a id="usrsharebarmanapi" class="anchor" href="#usrsharebarmanapi" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/usr/share/barmanapi/</h6>
+
+<p>Store some config files     </p>
+
+<ul>
+<li>client.conf                     : Store user information. You can change this file location in barmanapi.conf file.</li>
+<li>man.conf                        : Store man parse options. Do not change this file location and content.</li>
+<li>template/config_change_template : Store code template.  Do not change this file location and content.</li>
+</ul>
+
+<h4>
+<a id="barman-api-config-etcbarmanapiconf" class="anchor" href="#barman-api-config-etcbarmanapiconf" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BARMAN API Config (/etc/barmanapi.conf)</h4>
+
+<pre><code>  #Don't delete any option from this file. All option is using. If you don't need anyone, blank value this option
+  #User store location and pasword hash secret.
+  [user]
+  config_file=/usr/share/barmanapi/client.conf
+  #if change your secret all password is unusable. You must change all of password hash in user config_file
+  secret=89660c74da48ddd4efbe4d3c8f8150de
+
+  [application]
+  store_directory=/var/lib/barmanapi/
+  host=0.0.0.0
+  port=1935
+  #In production, must be False debug parameter.
+  debug=True
+
+  #Barman Server Settings
+  [barman]
+  config_file=/etc/barman.conf
+  command=/usr/bin/barman
+  remote=true
+  #If remote is false, you can blank remote_ssh option.
+  remote_ssh=ssh barman@backup
+  async_command=['backup','cron','recover']
+
+  [auth_token]
+  secret=Deneme
+  algorithm=HS256
+  #Token life time(second). At the end of this time token is unusable.
+  token_life=6000
+
+  [log]
+  #Stored last x log file
+  backup_count=5
+  #Log file truncate size(Bytes)
+  max_bytes=20000
+</code></pre>
+
+<h4>
+<a id="client-config-file" class="anchor" href="#client-config-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Client config file</h4>
+
+<pre><code>  [memin]
+  password = 26588e932c7ccfa1df309280702fe1b5
+  access = []
+  deny = []
+</code></pre>
+
+<p>Client file is basic conf file. You can store password, access api urls and deny api urls.</p>
+
+<ul>
+<li>Section is a username(Like memin)</li>
+<li>Password hash with your secret (described in your barman api config file).</li>
+<li>access is an array.
+
+<ul>
+<li>Blank array, user can call all APIS.</li>
+<li>Example access['barman','auth/user/list']. This example user access all /barman module api calls and only auth/user/list api call.</li>
+</ul>
+</li>
+<li>deny is an array. 
+
+<ul>
+<li>Deny some api calls. Example deny['barman','auth/user/list']. User access out of this apis(All /barman module api calls and only auth/user/list api call). </li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<a id="rest-api" class="anchor" href="#rest-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>REST API</h2>
+
+<h4>
+<a id="authentication--authorization" class="anchor" href="#authentication--authorization" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authentication &amp; Authorization</h4>
+
+<p>Rest: /auth<br>
+Auth Model: Basic   </p>
+
+<h6>
+<a id="authtoken" class="anchor" href="#authtoken" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/auth/token</h6>
+
+<p><b>Auth:</b> Yes<br>
+<b>Parameters:</b> No<br>
+<b>Return:</b> token   </p>
+
+<p>Get a token for other rest api calls</p>
+
+<h6>
+<a id="authuser" class="anchor" href="#authuser" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/auth/user</h6>
+
+<p><b>Auth:</b> Yes<br>
+<b>Parameters:</b> No<br>
+<b>Return:</b> json list</p>
+
+<p>Current user access and deny parameters </p>
+
+<h6>
+<a id="authuserlist" class="anchor" href="#authuserlist" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/auth/user/list</h6>
+
+<p><b>Auth:</b> Yes<br>
+<b>Parameters:</b> No<br>
+<b>Return:</b> json list   </p>
+
+<p>Get rest user list</p>
+
+<h6>
+<a id="authuserchange" class="anchor" href="#authuserchange" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/auth/user/change</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>     </p>
+
+<ul>
+<li>username: Required<br>
+</li>
+<li>password<br>
+</li>
+<li>access<br>
+</li>
+<li>deny<br>
+</li>
+</ul>
+
+<p><b>Return:</b> updated user properties  </p>
+
+<p>Change user properties    </p>
+
+<h6>
+<a id="authuseradd" class="anchor" href="#authuseradd" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/auth/user/add</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>username: Required<br>
+</li>
+<li>password: Required<br>
+</li>
+<li>access<br>
+</li>
+<li>deny<br>
+</li>
+</ul>
+
+<p><b>Return:</b> added user properties       </p>
+
+<p>Add user    </p>
+
+<h4>
+<a id="config" class="anchor" href="#config" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CONFIG</h4>
+
+<p>Rest: /config<br>
+Auth Model: Token Based<br>
+Description: You can change barman or barmanapi config file in rest api. If you want to use this future, you give write access to config files.     </p>
+
+<ul>
+<li>For Barman API<br>
+<code>
+api@barmanapi$ sudo chown api:api /etc/barmanapi.conf
+</code>
+</li>
+<li>For Barman<br>
+<code>
+barman@backup$ sudo chown barman:barman /etc/barman.conf
+</code>
+</li>
+</ul>
+
+<h6>
+<a id="configbarman" class="anchor" href="#configbarman" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/config/barman</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>token: Required</li>
+</ul>
+
+<p><b>Return:</b> Barman configuration list.       </p>
+
+<h6>
+<a id="configbarmanhelp" class="anchor" href="#configbarmanhelp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/config/barman/help</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>token: Required</li>
+</ul>
+
+<p><b>Return:</b> Barman configuration paramater list and descriptions.        </p>
+
+<h6>
+<a id="configbarmanreload" class="anchor" href="#configbarmanreload" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/config/barman/reload</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>token: Required</li>
+</ul>
+
+<p><b>Return:</b> Get Barman configuration parameters list and make configuration template</p>
+
+<h6>
+<a id="configbarmanchange" class="anchor" href="#configbarmanchange" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/config/barman/change</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>token: Required</li>
+</ul>
+
+<p><b>Return:</b> Change Barman configuration<br>
+<b>Example:</b>             </p>
+
+<ul>
+<li>http://host:port/config/barman/change?application.store_directory=/var/lib/barmanapi&amp;token=XX<br>
+</li>
+<li>http://host:port/config/barman/change?barman.command=/usr/bin/barman&amp;token=XX<br>
+</li>
+</ul>
+
+<p><b>Note:</b> Must be restart barman       </p>
+
+<h6>
+<a id="configbarmanapi" class="anchor" href="#configbarmanapi" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/config/barmanapi</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>token: Required</li>
+</ul>
+
+<p><b>Return:</b> Barman API configuration list</p>
+
+<h6>
+<a id="configbarmanapichange" class="anchor" href="#configbarmanapichange" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/config/barmanapi/change</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>token: Required</li>
+</ul>
+
+<p><b>Return:</b> Change Barman API configuration<br>
+<b>Example:</b>         </p>
+
+<ul>
+<li>http://host:port/config/barmanapi/change?barman.barman_user=barman&amp;token=XX<br>
+</li>
+<li>http://host:port/config/barmanapi/change?main.description=blabla&amp;token=XX<br>
+</li>
+</ul>
+
+<p><b>Note:</b> Must be restart barmanapi      </p>
+
+<h4>
+<a id="history" class="anchor" href="#history" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>HISTORY</h4>
+
+<p>Rest: /history<br>
+Auth Model: Token Based     </p>
+
+<h6>
+<a id="historylist" class="anchor" href="#historylist" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/history/list</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>token: Required<br>
+</li>
+<li>past: Optional - YYYYmm (Example : 201602). Get past archive history.<br>
+</li>
+</ul>
+
+<p><b>Return:</b> async command result list        </p>
+
+<p>In month executed async commands list. If you want to past history, you must be send past parameters.<br>
+<b>Example:</b>         </p>
+
+<ul>
+<li>http://host:port/history/list?token=XX</li>
+<li>http://host:port/history/list?past=201601&amp;token=XX</li>
+</ul>
+
+<h6>
+<a id="historyresult" class="anchor" href="#historyresult" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/history/result</h6>
+
+<p><b>Auth:</b>Yes<br>
+<b>Parameters: </b>   </p>
+
+<ul>
+<li>token: Required<br>
+</li>
+<li>ticket: Required<br>
+</li>
+</ul>
+
+<p><b>Return:</b> Sync command result       </p>
+
+<p>Ticket related async command result.   </p>
+
+<h4>
+<a id="barman-api" class="anchor" href="#barman-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BARMAN API</h4>
+
+<p>Rest: /barman<br>
+Auth Model: Token Based<br>
+<b>Description:</b> Execute barman commands. If you want to see parameter list, you use /barman/command/help url or full api list /barman/help url.     </p>
+
+<p><b>Example:</b>   </p>
+
+<ul>
+<li>http://host:port/barman/help?token=XX -&gt; Return all usable commands, descriptions and parameters list<br>
+</li>
+<li>http://host:port/barman/backup/help?token=XX -&gt; Return backup command description and parameters list<br>
+</li>
+<li>http://host:port/barman/backup?SERVERNAME=main&amp;token=XX<br>
+</li>
+<li>http://host:port/barman/list-server?token=XX<br>
+</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/emin100/barmanapi">Barmanapi</a> is maintained by <a href="https://github.com/emin100">emin100</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
